@@ -18,7 +18,8 @@ return new class extends Migration
             $table->integer('assets_id');
             $table->string('url');
             $table->string('type');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 

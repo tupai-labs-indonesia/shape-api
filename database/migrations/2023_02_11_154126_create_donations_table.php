@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string('user_id');
             $table->integer('amount');
-            $table->timestamps();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
         });
     }
 
