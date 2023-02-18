@@ -15,10 +15,12 @@ class UserController extends Controller
 
         foreach($users as $user){
             unset($user->password);
-            if($user->picture_path != null){
-                $user->picture_path = url('uploads/images/users') . '/' . $user->picture_path;
-            }else{
-                unset($user->picture_path);
+            if(isset($user->picture_path)){
+                if($user->picture_path != null){
+                    $user->picture_path = url('uploads/images/users') . '/' . $user->picture_path;
+                }else{
+                    unset($user->picture_path);
+                }
             }
         }
 
