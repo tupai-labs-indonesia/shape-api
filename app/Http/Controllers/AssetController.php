@@ -16,7 +16,7 @@ class AssetController extends Controller
         foreach($assets as $asset){
             $details = DB::table('asset_details')->where('asset_id', '=', $asset->id)->get();
             foreach($details as $detail){
-                $detail->url = public_path('uploads/images/assets/') . $detail->file_name;
+                $detail->url = url('uploads/images/assets') . '/' . $detail->file_name;
             }
             $asset->details = $details;
         }
