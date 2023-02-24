@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('asset_details', function (Blueprint $table) {
             $table->id();
-            $table->integer('assets_id');
-            $table->string('url');
+            $table->integer('asset_id');
+            $table->string('file_name');
             $table->string('type');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();

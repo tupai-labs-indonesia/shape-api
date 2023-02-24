@@ -12,6 +12,11 @@ class AssetController extends Controller
 {
     public function getAssets(Request $request){
         $assets= DB::table('asset_headers')->get();
+
+        foreach($assets as $asset){
+            $asset->details = DB::table('asset_details')->where('asset_id', '=', $asset->id)->get();
+        }
+
         $response['error'] = false;
         $response['message'] = "Success";
         $response['total_data'] = count($assets);
