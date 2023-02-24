@@ -26,6 +26,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->post('asset/add', 'AssetController@create');
 
     $router->group(['middleware' => 'auth'], function () use ($router){
+        $router->post('logout', 'AuthController@logout');
         $router->post('user/update', 'UserController@update');
     });
 });
