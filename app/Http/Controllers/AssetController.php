@@ -33,7 +33,9 @@ class AssetController extends Controller
         try{
             $validator = Validator::make($request->all(), [
                 'category' => 'required|string',
-                'created_by' => 'required',
+                'asset_id' => 'required|string',
+                'asset_name' => 'required|string',
+                'type' => 'required'
             ]);
 
             if ($validator->fails()) {
@@ -43,29 +45,18 @@ class AssetController extends Controller
                     'data' => ['error_message' => $validator->errors()]
                 ], 422);
             }else{
-                if($request->hasFile('asset_image')){
-                    $file = $request->file('asset_image');
-                    $allowedfileExtension = ['jpeg', 'jpg', 'png'];
+                if($request->hasFile('asset_file')){
+                    $file = $request->file('asset_file');
                     $extension = $file->getClientOriginalExtension();
 
-                    $checkExtension = in_array($extension, $allowedfileExtension);
-
-                    if ($checkExtension) {
-                        $imagePath = public_path('uploads/images/assets');
-                        $imageName = StringService::getRandString(15) . '.' . $extension;
-                        $request->file('asset_image')->move($imagePath, $imageName);
-                    } else {
-                        return response()->json([
-                            'error' => true,
-                            'message' => 'Please check your image extension, only [.jpeg, .jpg, .png] allowed!',
-                            'data' => ['error_message' => $validator->errors()]
-                        ], 422);
-                    }
+                    $imagePath = public_path('uploads/images/assets');
+                    $imageName = StringService::getRandString(15) . '.' . $extension;
+                    $request->file('asset_file')->move($imagePath, $imageName);
                 }else{
                     $imageName = '';
                 }
 
-                $status = AssetService::createAsset($request, $imageName);
+                $status = AssetService::createAsset($request, $imageName, $request->asset_id);
 
                 if($status['error']){
                     return response()->json([

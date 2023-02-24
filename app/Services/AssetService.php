@@ -8,18 +8,32 @@ use Illuminate\Support\Facades\Log;
 
 class AssetService {
 
-    public static function createAsset($data, $imageName = null){
+    public static function createAsset($data, $imageName = null, $asset_id=null){
         try{
             DB::beginTransaction();
-            $newAsset = [
-                'category' => $data->category,
-                'file_name' => $imageName,
-                'created_by' => $data->created_by,
-            ];
 
-            DB::table('asset_headers')->insertGetId($newAsset);
+            if($asset_id){
+                $id = DB::table('asset_headers')->where('id', '=', $asset_id)->first();
+                if($id){
+                    DB::table('asset_details')->insert([
+                        'asset_id' => $asset_id,
+                        'file_name' => $imageName,
+                        'type' => $data->type
+                    ]);
+                }else{
+                    $newAssetHeader = [
+                        'asset_name' => $data->asset_name,
+                        'category' => $data->category,
+                    ];
+                    $newAssetId = DB::table('asset_headers')->insertGetId($newAssetHeader);
+                    DB::table('asset_details')->insert([
+                        'asset_id' => $newAssetId,
+                        'file_name' => $imageName,
+                        'type' => $data->type
+                    ]);
+                }
+            }
             DB::commit();
-
             return (
                 [
                     "error"=>false,
