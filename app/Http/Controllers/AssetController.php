@@ -19,6 +19,9 @@ class AssetController extends Controller
             $preview = $details;
 
             $preview = $preview->where('type', '=', 'preview')->get();
+            foreach($preview as $preview_url){
+                $preview_url->url = url('uploads/images/assets') . '/' . $preview_url->file_name;
+            }
             $asset->preview = $preview;
 
             $details = $details->get();
