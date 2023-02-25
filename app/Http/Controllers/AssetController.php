@@ -15,22 +15,12 @@ class AssetController extends Controller
         $assets= DB::table('asset_headers')->get();
 
         foreach($assets as $asset){
-            $details = DB::table('asset_details')->where('asset_id', '=', $asset->id);
+            $preview = DB::table('asset_details')->where('asset_id', '=', $asset->id)->where('type', '=', 'preview')->get();
 
-            $preview = $details;
-
-            $preview = $preview->where('type', '=', 'preview')->get();
             foreach($preview as $preview_url){
                 $preview_url->url = url('uploads/images/assets') . '/' . $preview_url->file_name;
             }
             $asset->preview = $preview;
-
-            $details = $details->get();
-
-            foreach($details as $detail){
-                $detail->url = url('uploads/images/assets') . '/' . $detail->file_name;
-            }
-            $asset->details = $details;
         }
 
         $response['error'] = false;
