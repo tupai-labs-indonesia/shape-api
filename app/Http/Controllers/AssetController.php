@@ -11,6 +11,7 @@ use App\Services\LogService;
 
 class AssetController extends Controller
 {
+    //punya aqil
     public function getAssets(Request $request){
         $assets= DB::table('asset_headers')->get();
 
@@ -35,9 +36,40 @@ class AssetController extends Controller
         }else{
             $user_id = null;
         }
-
-        LogService::insertLog('Asset', 'Get Data', null, $response['error'], $response['message'], $user_id);
         return response()->json($response, 200);
+    }
+
+//punya rian
+    public function getAssetById(Request $request){
+        
+        if(isset($request->id)){
+            $data= DB::table('asset_headers')->where('id','=', $request->id)->first();
+
+                $detail = DB::table('asset_details')->where('asset_id', '=', $request->id)->where('type', '=', 'detail')->get();
+    
+                foreach($detail as $detail_url){
+                    $detail_url->url = url('uploads/images/assets') . '/' . $detail_url->file_name;
+                }
+                $data->detail = $detail;
+                
+                $response['error'] = false;
+                $response['message'] = "Success";
+                $response['total_data'] = count($data);
+                $response['data'] = $data;
+        
+                $user_id=null;
+        
+                if(auth()->user()){
+                    $user_id = auth()->user()->id;
+                }else{
+                    $user_id = null;
+                }
+        
+                LogService::insertLog('Asset', 'Get Data', null, $response['error'], $response['message'], $user_id);
+                return response()->json($response, 200);
+            
+        }
+
     }
 
     public function create(Request $request){
