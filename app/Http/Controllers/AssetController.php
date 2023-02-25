@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Services\AssetService;
+use App\Services\LogService;
 
 class AssetController extends Controller
 {
@@ -37,6 +38,15 @@ class AssetController extends Controller
         $response['total_data'] = count($assets);
         $response['data'] = $assets;
 
+        $user_id=null;
+
+        if(auth()->user()){
+            $user_id = auth()->user()->id;
+        }else{
+            $user_id = null;
+        }
+
+        LogService::insertLog('Asset', 'Get Data', null, $response['error'], $response['message'], $user_id);
         return response()->json($response, 200);
     }
 

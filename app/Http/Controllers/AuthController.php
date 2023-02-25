@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\LogService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Crypt;
@@ -42,7 +43,7 @@ class AuthController extends Controller
                         $response['token'] = $token;
                         $response['token_type'] = 'bearer';
                         $response['expires_in'] = Auth::factory()->getTTL();
-
+                        LogService::insertLog('Authentication', 'Login', $request->username, $response['error'], $response['message'], $userId);
                         return response()->json($response, 200);
                     }
                 }
@@ -65,6 +66,7 @@ class AuthController extends Controller
         Auth::logout();
         $response['message'] = "Successfully logged out";
         $response['error'] = false;
+        LogService::insertLog('Authentication', 'Logout', null, $response['error'], $response['message'], $user_id);
         return response()->json($response);
     }
 }
