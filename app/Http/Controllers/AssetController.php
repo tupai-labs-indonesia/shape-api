@@ -54,7 +54,7 @@ class AssetController extends Controller
                 
                 $response['error'] = false;
                 $response['message'] = "Success";
-                $response['total_data'] = count($data);
+                $response['total_data'] = 1;
                 $response['data'] = $data;
         
                 $user_id=null;
