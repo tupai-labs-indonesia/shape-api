@@ -128,7 +128,7 @@ class AssetController extends Controller
             $data = DB::table('asset_details')
             ->select('type')
             ->where('asset_id', '=', $request->id)
-            ->get();
+            ->pluck('type');
         }
 
         $response['error'] = false;
