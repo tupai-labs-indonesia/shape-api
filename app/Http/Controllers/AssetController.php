@@ -134,6 +134,6 @@ class AssetController extends Controller
         $response['error'] = false;
         $response['message'] = "Success";
         $response['data'] = $data;
-
+        return response()->json($response, 200);
     }
 }
