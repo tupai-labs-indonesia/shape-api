@@ -39,6 +39,35 @@ class AssetController extends Controller
         return response()->json($response, 200);
     }
 
+    // baru untuk filter
+    public function filter(Request $request){
+        $filter_by = $request->filter;
+        $assets= DB::table('asset_headers')->where('category', '=', $filter_by)->get();
+
+    foreach($assets as $asset){
+        $preview = DB::table('asset_details')->where('asset_id', '=', $asset->id)->where('type', '=', 'preview')->get();
+
+    foreach($preview as $preview_url){
+        $preview_url->url = url('uploads/images/assets') . '/' . $preview_url->file_name;
+    }
+        $asset->preview = $preview;
+}
+
+    $response['error'] = false;
+    $response['message'] = "Success";
+    $response['total_data'] = count($assets);
+    $response['data'] = $assets;
+
+    $user_id=null;
+
+    if(auth()->user()){
+        $user_id = auth()->user()->id;
+    }else{
+        $user_id = null;
+    }
+        return response()->json($response, 200);
+}
+
 //punya rian
     public function getAssetById(Request $request){
 

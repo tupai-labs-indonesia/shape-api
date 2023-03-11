@@ -23,7 +23,7 @@ $router->group(['prefix' => 'api'], function () use ($router) {
     $router->get('users', 'UserController@getUsers');
     $router->post('user/registration', 'UserController@create');
     $router->get('assets/search', 'AssetController@search');
-    
+    $router->get('assets/filter', 'AssetController@filter');
     $router->get('assets', 'AssetController@getAssets');
     $router->post('asset/add', 'AssetController@create');
     $router->get('asset/{id}', 'AssetController@getAssetById');
