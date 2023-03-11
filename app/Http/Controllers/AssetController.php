@@ -41,33 +41,33 @@ class AssetController extends Controller
 
 //punya rian
     public function getAssetById(Request $request){
-        
+
         if(isset($request->id)){
             $data= DB::table('asset_headers')->where('id','=', $request->id)->first();
 
                 $detail = DB::table('asset_details')->where('asset_id', '=', $request->id)->get();
-    
+
                 foreach($detail as $detail_url){
                     $detail_url->url = url('uploads/images/assets') . '/' . $detail_url->file_name;
                 }
                 $data->detail = $detail;
-                
+
                 $response['error'] = false;
                 $response['message'] = "Success";
                 $response['total_data'] = 1;
                 $response['data'] = $data;
-        
+
                 $user_id=null;
-        
+
                 if(auth()->user()){
                     $user_id = auth()->user()->id;
                 }else{
                     $user_id = null;
                 }
-        
+
                 LogService::insertLog('Asset', 'Get Data', null, $response['error'], $response['message'], $user_id);
                 return response()->json($response, 200);
-            
+
         }
 
     }
@@ -149,5 +149,22 @@ class AssetController extends Controller
                 'message' => 'Failed save asset data!, ' . $e->getMessage()
             ], 409);
         }
+    }
+
+    public function getAssetDropdown(Request $request){
+        $data = [];
+
+        if($request->dd_type == "image_type"){
+            $data = DB::table('asset_details')
+            ->select('type')
+            ->where('asset_id', '=', $request->id)
+            ->where('type', '!=', 'preview')
+            ->pluck('type');
+        }
+
+        $response['error'] = false;
+        $response['message'] = "Success";
+        $response['data'] = $data;
+        return response()->json($response, 200);
     }
 }
