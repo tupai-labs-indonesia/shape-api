@@ -71,6 +71,36 @@ class AssetController extends Controller
         }
 
     }
+    
+// baru untuk search
+    public function search(Request $request){
+            $search_text = $request->search;
+            $assets= DB::table('asset_headers')->where('asset_name','LIKE', '%'.$search_text.'%')->get();
+
+        foreach($assets as $asset){
+            $preview = DB::table('asset_details')->where('asset_id', '=', $asset->id)->where('type', '=', 'preview')->get();
+
+        foreach($preview as $preview_url){
+            $preview_url->url = url('uploads/images/assets') . '/' . $preview_url->file_name;
+        }
+            $asset->preview = $preview;
+    }
+
+        $response['error'] = false;
+        $response['message'] = "Success";
+        $response['total_data'] = count($assets);
+        $response['data'] = $assets;
+
+        $user_id=null;
+
+        if(auth()->user()){
+            $user_id = auth()->user()->id;
+        }else{
+            $user_id = null;
+        }
+            return response()->json($response, 200);
+    }
+
 
     public function create(Request $request){
         try{
